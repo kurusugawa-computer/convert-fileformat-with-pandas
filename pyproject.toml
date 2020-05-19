@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "convpandas"
+version = "0.1.0"
+description = "Convert file format with pandas"
+authors = ["yuji38kwmt <yuji38kwmt@yahoo.co.jp>"]
+license = "MIT"
+keywords=["pandas", "csv","xlsx", "excel"]
+readme="README.md"
+repository="https://github.com/yuji38kwmt/convert-fileformat-with-pandas.git"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Utilities",
+    "Operating System :: OS Independent",
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pandas = "^1.0.3"
+click = "^7.1.2"
+
+[tool.poetry.dev-dependencies]
+flake8 = "*"
+autoflake = "*"
+isort = "*"
+black = {version = "^19.10b0", allow-prereleases = true}
+
+
+[tool.poetry.scripts]
+convpandas = "convpandas.__main__:cli"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
