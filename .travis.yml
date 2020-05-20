@@ -1,0 +1,16 @@
+dist: xenial
+language: python
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+install:
+  - pip install poetry
+  - poetry install
+
+script:
+   - pipenv run mypy convpandas
+   - poetry run flake8 convpandas
+branches:
+  only:
+  - master
