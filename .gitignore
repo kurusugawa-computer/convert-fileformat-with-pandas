@@ -112,6 +112,4 @@ venv.bak/
 # output directory of tests
 tests/out/
 
-.annofab-cli/
-
 pip-wheel-metadata/

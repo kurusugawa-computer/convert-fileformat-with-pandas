@@ -1,3 +1,5 @@
+import json
+
 import click
 
 
@@ -23,11 +25,11 @@ import click
 )
 @click.option(
     "--read_excel_args",
-    help="Indicates 'pandas.read_excel' arguments with JSON-formatted. See also https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html .",
+    help="Indicates 'pandas.read_excel' arguments with JSON-formatted. This option has the highest priority. See also https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_excel.html .",
 )
 @click.option(
     "--to_csv_args",
-    help="Indicates 'pandas.DataFrame.to_csv' arguments with JSON-formatted. See also https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html .",
+    help="Indicates 'pandas.DataFrame.to_csv' arguments with JSON-formatted. This option has the highest priority. See also https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html .",
 )
 def xlsx2csv(
     xlsx_file: str,
@@ -39,4 +41,8 @@ def xlsx2csv(
     read_excel_args,
     to_csv_args,
 ):
-    pass
+    read_excel_kwargs
+    if read_excel_args is not None:
+        read_excel_kwargs = json.loads(read_excel_args)
+    if to_csv_args is not None:
+        to_csv_kwargs = json.loads(to_csv_args)

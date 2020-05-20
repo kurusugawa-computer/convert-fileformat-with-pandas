@@ -13,6 +13,7 @@ format:
 	poetry run isort --verbose --recursive ${TARGET}
 
 lint:
+	pipenv run mypy ${TARGET}
 	poetry run flake8 ${TARGET}
 
 publish:
