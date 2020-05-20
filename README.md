@@ -26,6 +26,16 @@ Convert csv file to xlsx file.
 $ convpandas csv2xlsx in.csv out.xlsx
 ```
 
+### Options
+
+```
+Options:
+  --sep TEXT                   Delimiter to use when reading csv.  [default:,]
+  --encoding TEXT              Encoding to use when reading csv. List of Python standard encodings .  [default: utf-8]
+  --quotechar TEXT             The character used to denote the start and end of a quoted item when reading csv.
+  --string_to_numeric BOOLEAN  If true, convert string to numeric. [default: utf-8]
+```
+
 ## xlsx2csv
 Convert xlsx file to csv file.
 
@@ -33,3 +43,11 @@ Convert xlsx file to csv file.
 $ convpandas xlsx2csv in.xlsx out.csv
 ```
 
+
+```
+Options:
+  --sheet_name TEXT  Sheet name when reading xlsx. If not specified, read 1st sheet.
+  --sep TEXT         Field delimiter for the output file.  [default: ,]
+  --encoding TEXT    A string representing the encoding to use in the output file.  [default: utf-8]
+  --quotechar TEXT   Character used to quote fields.
+```
