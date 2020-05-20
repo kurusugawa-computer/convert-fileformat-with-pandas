@@ -45,7 +45,7 @@ def _to_excel(
 
 @click.command(name="csv2xlsx", help="Convert csv file to xlsx file.")
 @click.argument("csv_file")
-@click.argument("xlsx_file")
+@click.argument("xlsx_file", required=False)
 @click.option(
     "--sep", default=",", show_default=True, help="Delimiter to use when reading csv."
 )
@@ -67,11 +67,15 @@ def _to_excel(
 )
 def csv2xlsx(
     csv_file: str,
-    xlsx_file: str,
+    xlsx_file: Optional[str],
     sep: str,
     encoding: str,
     quotechar: Optional[str],
     string_to_numeric: bool,
 ):
-    df = _read_csv(csv_file, sep=sep, encoding=encoding, quotechar=quotechar,)
+    df = _read_csv(csv_file, sep=sep, encoding=encoding, quotechar=quotechar)
+    if xlsx_file is None:
+        csv_file_path = Path(csv_file)
+        xlsx_file_name = f"{csv_file_path.stem}.xlsx"
+        xlsx_file = str(csv_file_path.parent / xlsx_file_name)
     _to_excel(df=df, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
