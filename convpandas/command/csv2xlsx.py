@@ -19,14 +19,22 @@ def _read_csv(
     return pandas.read_csv(csv_file, **read_csv_kwargs)
 
 
+def _to_numeric(value):
+    return pandas.to_numeric(value, errors="ignore")
+
+
+def _do_not_anything(value):
+    return value
+
+
 def _to_excel(
     df: pandas.DataFrame, xlsx_file: str, string_to_numeric: bool = True,
 ) -> None:
     Path(xlsx_file).parent.mkdir(exist_ok=True, parents=True)
     if string_to_numeric:
-        convert_func = lambda e: pandas.to_numeric(e, errors="ignore")
+        convert_func = _to_numeric
     else:
-        convert_func = lambda e: e
+        convert_func = _do_not_anything
 
     workbook = openpyxl.Workbook(write_only=True)
     worksheet = workbook.create_sheet()
