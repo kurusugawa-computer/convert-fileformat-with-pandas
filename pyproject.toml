@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "convpandas"
-version = "0.1.0"
+version = "0.1.1"
 description = "Convert file format with pandas"
-authors = ["yuji38kwmt <yuji38kwmt@yahoo.co.jp>"]
+authors = ["yuji38kwmt <yuji38kwmt@gmail.com>"]
+maintainers = ["yuji38kwmt <yuji38kwmt@gmail.com>"]
 license = "MIT"
 keywords=["pandas", "csv","xlsx", "excel"]
 readme="README.md"

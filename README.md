@@ -6,7 +6,7 @@ Convert file format with pandas
 [![Python Versions](https://img.shields.io/pypi/pyversions/convpandas.svg)](https://pypi.org/project/convpandas/)
 
 # Requirements
-* Python 3.6+
+* Python 3.7+
 
 # Install
 
