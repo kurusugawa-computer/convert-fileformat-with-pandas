@@ -26,7 +26,6 @@ Convert csv file to xlsx file.
 $ convpandas csv2xlsx in.csv out.xlsx
 ```
 
-### Options
 
 ```
 Options:
