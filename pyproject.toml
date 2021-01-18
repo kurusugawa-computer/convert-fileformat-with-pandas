@@ -27,7 +27,7 @@ python = "^3.7"
 pandas = "^1.0.3"
 click = "^7.1.2"
 openpyxl = "^3.0.3"
-xlrd = "^1.2.0"
+xlrd = ">=1.2,<3.0"
 
 [tool.poetry.dev-dependencies]
 mypy = "*"
