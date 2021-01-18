@@ -8,7 +8,7 @@ install:
   - poetry install
 
 script:
-   - pipenv run mypy convpandas
+   - poetry run mypy convpandas
    - poetry run flake8 convpandas
 branches:
   only:
