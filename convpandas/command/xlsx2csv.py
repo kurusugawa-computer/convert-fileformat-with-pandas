@@ -1,3 +1,5 @@
+import os
+import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -54,6 +56,10 @@ def xlsx2csv(
     encoding: str,
     quotechar: str,
 ):
+    if not os.path.exists(xlsx_file):
+        print(f"No such file or directory: '{xlsx_file}'", file=sys.stderr)
+        sys.exit(1)
+
     df = _read_excel(xlsx_file, sheet_name=sheet_name)
     if csv_file is None:
         xlsx_file_path = Path(xlsx_file)
