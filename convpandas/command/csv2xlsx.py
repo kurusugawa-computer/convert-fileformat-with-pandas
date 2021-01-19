@@ -48,7 +48,6 @@ def _to_excel(
     workbook.save(xlsx_file)
 
 
-
 @click.command(name="csv2xlsx", help="Convert csv file to xlsx file.")
 @click.argument("csv_file")
 @click.argument("xlsx_file", required=False)
