@@ -10,6 +10,7 @@ install:
 script:
    - poetry run mypy convpandas
    - poetry run flake8 convpandas
+   - poetry run pytest tests
 branches:
   only:
   - master
