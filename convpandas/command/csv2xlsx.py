@@ -22,7 +22,10 @@ def _read_csv(
 
 
 def _to_numeric(value):
-    return pandas.to_numeric(value, errors="ignore")
+    try:
+        return float(value)
+    except ValueError:
+        return value
 
 
 def _do_not_anything(value):
@@ -45,6 +48,7 @@ def _to_excel(
     workbook.save(xlsx_file)
 
 
+
 @click.command(name="csv2xlsx", help="Convert csv file to xlsx file.")
 @click.argument("csv_file")
 @click.argument("xlsx_file", required=False)
@@ -65,7 +69,7 @@ def _to_excel(
     "--string_to_numeric",
     type=bool,
     default=True,
-    help="If true, convert string to numeric. [default: utf-8]",
+    help="If true, convert string to numeric. [default: true]",
 )
 def csv2xlsx(
     csv_file: str,
@@ -84,4 +88,5 @@ def csv2xlsx(
         csv_file_path = Path(csv_file)
         xlsx_file_name = f"{csv_file_path.stem}.xlsx"
         xlsx_file = str(csv_file_path.parent / xlsx_file_name)
+
     _to_excel(df=df, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
