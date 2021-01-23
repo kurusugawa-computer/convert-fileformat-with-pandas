@@ -9,7 +9,10 @@ import pandas
 
 
 def _read_csv(
-    csv_file: str, sep: str, encoding: str, quotechar: Optional[str],
+    csv_file: str,
+    sep: str,
+    encoding: str,
+    quotechar: Optional[str],
 ) -> pandas.DataFrame:
     read_csv_kwargs = {
         "sep": sep,
@@ -22,10 +25,7 @@ def _read_csv(
 
 
 def _to_numeric(value):
-    try:
-        return float(value)
-    except ValueError:
-        return value
+    return pandas.to_numeric(value, errors="ignore")
 
 
 def _do_not_anything(value):
@@ -33,7 +33,9 @@ def _do_not_anything(value):
 
 
 def _to_excel(
-    df: pandas.DataFrame, xlsx_file: str, string_to_numeric: bool = True,
+    df: pandas.DataFrame,
+    xlsx_file: str,
+    string_to_numeric: bool = True,
 ) -> None:
     Path(xlsx_file).parent.mkdir(exist_ok=True, parents=True)
     if string_to_numeric:

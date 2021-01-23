@@ -46,7 +46,9 @@ def _to_csv(
     help="A string representing the encoding to use in the output file.",
 )
 @click.option(
-    "--quotechar", default='"', help="Character used to quote fields.",
+    "--quotechar",
+    default='"',
+    help="Character used to quote fields.",
 )
 def xlsx2csv(
     xlsx_file: str,
