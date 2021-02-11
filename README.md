@@ -65,14 +65,41 @@ $ convpandas csv2xlsx in1.csv in2.csv out.xlsx
 Convert xlsx file to csv file.
 
 ```
-$ convpandas xlsx2csv in.xlsx out.csv
-```
+$ convpandas xlsx2csv --help
+Usage: convpandas xlsx2csv [OPTIONS] XLSX_FILE CSV_FILE
 
+  Convert xlsx file to csv file.
 
-```
 Options:
   --sheet_name TEXT  Sheet name when reading xlsx. If not specified, read 1st sheet.
+
   --sep TEXT         Field delimiter for the output file.  [default: ,]
+
   --encoding TEXT    A string representing the encoding to use in the output file.  [default: utf-8]
-  --quotechar TEXT   Character used to quote fields.
+
+  --quotechar TEXT   Character used to quote fields. 
+
+  --help             Show this message and exit.
+```
+
+
+Convert `in.xlsx` to `out.csv` .
+
+```
+$ convpandas csv2xlsx in.xlsx out.csv
+```
+
+
+When specifying `-` for `CSV_FILE`, write to STDOUT. 
+
+```
+$ convpandas csv2xlsx in.xlsx -
+name,age
+Alice,23
+```
+
+With specifying `--sheet_name`, you can select sheet name that you want to convert.
+
+```
+$ convpandas csv2xlsx in.xlsx out.csv --sheet_name sheet2
 ```
