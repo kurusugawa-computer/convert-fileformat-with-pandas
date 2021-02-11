@@ -15,9 +15,14 @@ def _read_excel(xlsx_file: str, sheet_name: Optional[str]) -> pandas.DataFrame:
 
 
 def _to_csv(
-    df: pandas.DataFrame, csv_file: str, sep: str, encoding: str, quotechar: str
+    df: pandas.DataFrame,
+    filepath_or_buffer: Any,
+    sep: str,
+    encoding: str,
+    quotechar: str,
 ) -> None:
-    Path(csv_file).parent.mkdir(exist_ok=True, parents=True)
+    if isinstance(filepath_or_buffer, str):
+        Path(filepath_or_buffer).parent.mkdir(exist_ok=True, parents=True)
 
     to_csv_kwargs = {
         "sep": sep,
@@ -26,12 +31,12 @@ def _to_csv(
         "header": False,
         "index": False,
     }
-    df.to_csv(csv_file, **to_csv_kwargs)
+    df.to_csv(filepath_or_buffer, **to_csv_kwargs)
 
 
 @click.command(name="xlsx2csv", help="Convert xlsx file to csv file.")
 @click.argument("xlsx_file")
-@click.argument("csv_file", required=False)
+@click.argument("csv_file")
 @click.option(
     "--sheet_name",
     help="Sheet name when reading xlsx. If not specified, read 1st sheet.",
@@ -63,9 +68,9 @@ def xlsx2csv(
         sys.exit(1)
 
     df = _read_excel(xlsx_file, sheet_name=sheet_name)
-    if csv_file is None:
-        xlsx_file_path = Path(xlsx_file)
-        csv_file_name = f"{xlsx_file_path.stem}.csv"
-        csv_file = str(xlsx_file_path.parent / csv_file_name)
 
-    _to_csv(df, csv_file, sep=sep, encoding=encoding, quotechar=quotechar)
+    filepath_or_buffer: Any = csv_file
+    if csv_file == "-":
+        filepath_or_buffer = sys.stdout
+
+    _to_csv(df, filepath_or_buffer, sep=sep, encoding=encoding, quotechar=quotechar)
