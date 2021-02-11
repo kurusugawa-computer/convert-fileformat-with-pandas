@@ -103,12 +103,18 @@ def csv2xlsx(
     quotechar: Optional[str],
     string_to_numeric: bool,
 ):
+    print(f"{csv_file=}")
+    print(f"{xlsx_file=}")
     df_dict = {}
 
     if csv_file == tuple("-"):
         str_stdin = click.get_text_stream("stdin", encoding=encoding).read()
-        df = _read_csv(str_stdin, sep=sep, encoding=encoding, quotechar=quotechar)
+        df = _read_csv(
+            io.StringIO(str_stdin), sep=sep, encoding=encoding, quotechar=quotechar
+        )
         df_dict["-"] = df
+        _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
+        return
 
     for file in csv_file:
         file_path = Path(file)
