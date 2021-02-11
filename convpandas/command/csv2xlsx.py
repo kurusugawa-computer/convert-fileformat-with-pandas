@@ -1,7 +1,8 @@
+import io
 import os
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 import click
 import openpyxl
@@ -9,7 +10,7 @@ import pandas
 
 
 def _read_csv(
-    csv_file: str,
+    csv_file: Union[str, io.TextIOBase],
     sep: str,
     encoding: str,
     quotechar: Optional[str],
@@ -60,7 +61,8 @@ def _to_excel(
     "--encoding",
     default="utf-8",
     show_default=True,
-    help="Encoding to use when reading csv. List of Python standard encodings .",
+    help="Encoding to use when reading csv. List of Python standard encodings. "
+    "(https://docs.python.org/3/library/codecs.html#standard-encodings)",
 )
 @click.option(
     "--quotechar",
@@ -80,14 +82,25 @@ def csv2xlsx(
     quotechar: Optional[str],
     string_to_numeric: bool,
 ):
-    if not os.path.exists(csv_file):
-        print(f"No such file or directory: '{csv_file}'", file=sys.stderr)
-        sys.exit(1)
+    filepath_or_buffer: Union[str, io.TextIOBase] = csv_file
+    if csv_file == "-":
+        if xlsx_file is None:
+            print(
+                "When specifying '-' for 'CSV_FILE', 'XLSX_FILE' is required.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        str_stdin = click.get_text_stream("stdin", encoding=encoding).read()
+        filepath_or_buffer = io.StringIO(str_stdin)
 
-    df = _read_csv(csv_file, sep=sep, encoding=encoding, quotechar=quotechar)
+    else:
+        if not os.path.exists(csv_file):
+            print(f"No such file or directory: '{csv_file}'", file=sys.stderr)
+            sys.exit(1)
+
+    df = _read_csv(filepath_or_buffer, sep=sep, encoding=encoding, quotechar=quotechar)
     if xlsx_file is None:
         csv_file_path = Path(csv_file)
         xlsx_file_name = f"{csv_file_path.stem}.xlsx"
         xlsx_file = str(csv_file_path.parent / xlsx_file_name)
-
     _to_excel(df=df, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
