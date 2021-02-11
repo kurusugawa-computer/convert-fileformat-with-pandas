@@ -36,7 +36,7 @@ def _to_csv(
 
 @click.command(name="xlsx2csv", help="Convert xlsx file to csv file.")
 @click.argument("xlsx_file")
-@click.argument("csv_file", required=False)
+@click.argument("csv_file")
 @click.option(
     "--sheet_name",
     help="Sheet name when reading xlsx. If not specified, read 1st sheet.",
@@ -70,11 +70,7 @@ def xlsx2csv(
     df = _read_excel(xlsx_file, sheet_name=sheet_name)
 
     filepath_or_buffer: Any = csv_file
-    if csv_file is None:
-        xlsx_file_path = Path(xlsx_file)
-        csv_file_name = f"{xlsx_file_path.stem}.csv"
-        filepath_or_buffer = str(xlsx_file_path.parent / csv_file_name)
-    elif csv_file == "-":
+    if csv_file == "-":
         filepath_or_buffer = sys.stdout
 
     _to_csv(df, filepath_or_buffer, sep=sep, encoding=encoding, quotechar=quotechar)

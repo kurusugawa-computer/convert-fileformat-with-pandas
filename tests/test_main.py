@@ -52,6 +52,12 @@ class Test_xlsx2csv:
         )
         assert result.exit_code == 0
 
+    def test_specify_sheetname(self):
+        result = self.runner.invoke(
+            xlsx2csv, [str(data_path / "test.xlsx"), str(out_path / "out2.csv"), "--sheet_name","bob"]
+        )
+        assert result.exit_code == 0
+
     def test_output_stdout_csv(self):
         result = self.runner.invoke(xlsx2csv, [str(data_path / "test2.xlsx"), "-"])
         assert result.exit_code == 0
