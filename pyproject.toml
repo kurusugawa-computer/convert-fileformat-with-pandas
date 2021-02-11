@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "convpandas"
-version = "0.1.5"
+version = "0.2.0"
 description = "Convert file format with pandas"
 authors = ["yuji38kwmt"]
 maintainers = ["yuji38kwmt"]
