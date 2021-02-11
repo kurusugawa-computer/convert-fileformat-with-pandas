@@ -1,8 +1,7 @@
 import io
-import os
 import sys
 from pathlib import Path
-from typing import Optional, Union
+from typing import Dict, Optional, Tuple, Union
 
 import click
 import openpyxl
@@ -34,7 +33,7 @@ def _do_not_anything(value):
 
 
 def _to_excel(
-    df: pandas.DataFrame,
+    df_dict: Dict[str, pandas.DataFrame],
     xlsx_file: str,
     string_to_numeric: bool = True,
 ) -> None:
@@ -45,15 +44,37 @@ def _to_excel(
         convert_func = _do_not_anything
 
     workbook = openpyxl.Workbook(write_only=True)
-    worksheet = workbook.create_sheet()
-    for row_index, row in df.iterrows():
-        worksheet.append([convert_func(value) for value in row])
+    for sheet_name, df in df_dict.items():
+        if sheet_name == "-":
+            worksheet = workbook.create_sheet()
+        else:
+            worksheet = workbook.create_sheet(title=sheet_name)
+        values = df.values
+        for row_index in range(df.shape[0]):
+            row = values[row_index]
+            worksheet.append([convert_func(value) for value in row])
     workbook.save(xlsx_file)
+
+
+def append_df_to_dict(
+    df_dict: Dict[str, pandas.DataFrame], sheet_name: str, df: pandas.DataFrame
+):
+    if sheet_name not in df_dict:
+        df_dict[sheet_name] = df
+        return
+
+    index = 1
+    while True:
+        new_sheet_name = f"{sheet_name}_{index}"
+        if new_sheet_name not in df_dict:
+            df_dict[new_sheet_name] = df
+            return df_dict
+        index += 1
 
 
 @click.command(name="csv2xlsx", help="Convert csv file to xlsx file.")
 @click.argument("csv_file", nargs=-1)
-@click.argument("xlsx_file", required=False)
+@click.argument("xlsx_file", nargs=1)
 @click.option(
     "--sep", default=",", show_default=True, help="Delimiter to use when reading csv."
 )
@@ -75,35 +96,27 @@ def _to_excel(
     help="If true, convert string to numeric. [default: true]",
 )
 def csv2xlsx(
-    csv_file: str,
-    xlsx_file: Optional[str],
+    csv_file: Tuple[str],
+    xlsx_file: str,
     sep: str,
     encoding: str,
     quotechar: Optional[str],
     string_to_numeric: bool,
 ):
-    click.echo(csv_file)
-    click.echo(xlsx_file)
+    df_dict = {}
 
-    filepath_or_buffer: Union[str, io.TextIOBase] = csv_file
-    if csv_file == "-":
-        if xlsx_file is None:
-            print(
-                "When specifying '-' for 'CSV_FILE', 'XLSX_FILE' is required.",
-                file=sys.stderr,
-            )
-            sys.exit(1)
+    if csv_file == tuple("-"):
         str_stdin = click.get_text_stream("stdin", encoding=encoding).read()
-        filepath_or_buffer = io.StringIO(str_stdin)
+        df = _read_csv(str_stdin, sep=sep, encoding=encoding, quotechar=quotechar)
+        df_dict["-"] = df
 
-    else:
-        if not os.path.exists(csv_file):
-            print(f"No such file or directory: '{csv_file}'", file=sys.stderr)
+    for file in csv_file:
+        file_path = Path(file)
+        if not file_path.exists():
+            print(f"No such file: '{file}'", file=sys.stderr)
             sys.exit(1)
 
-    df = _read_csv(filepath_or_buffer, sep=sep, encoding=encoding, quotechar=quotechar)
-    if xlsx_file is None:
-        csv_file_path = Path(csv_file)
-        xlsx_file_name = f"{csv_file_path.stem}.xlsx"
-        xlsx_file = str(csv_file_path.parent / xlsx_file_name)
-    _to_excel(df=df, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
+        df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
+        append_df_to_dict(df_dict, sheet_name=file_path.stem, df=df)
+
+    _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
