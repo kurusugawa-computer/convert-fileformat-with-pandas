@@ -52,7 +52,7 @@ def _to_excel(
 
 
 @click.command(name="csv2xlsx", help="Convert csv file to xlsx file.")
-@click.argument("csv_file")
+@click.argument("csv_file", nargs=-1)
 @click.argument("xlsx_file", required=False)
 @click.option(
     "--sep", default=",", show_default=True, help="Delimiter to use when reading csv."
@@ -82,6 +82,9 @@ def csv2xlsx(
     quotechar: Optional[str],
     string_to_numeric: bool,
 ):
+    click.echo(csv_file)
+    click.echo(xlsx_file)
+
     filepath_or_buffer: Union[str, io.TextIOBase] = csv_file
     if csv_file == "-":
         if xlsx_file is None:
