@@ -103,8 +103,6 @@ def csv2xlsx(
     quotechar: Optional[str],
     string_to_numeric: bool,
 ):
-    print(f"{csv_file=}")
-    print(f"{xlsx_file=}")
     df_dict = {}
 
     if csv_file == tuple("-"):
