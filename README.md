@@ -46,13 +46,13 @@ $ convpandas csv2xlsx in.csv out.xlsx
 ```
 
 
-When specifying `-` for `CSV_FILE`, get from STDIN. 
+When `CSV_FILE` is `-` , STDIN is used for input. 
 
 ```
 $ convpandas csv2xlsx - out.xlsx < in.csv
 ```
 
-Convert `in1.csv` and `in2.csv` to `out.xlsx` . Sheet name is csv filename without its suffix.  
+Convert `in1.csv` and `in2.csv` to `out.xlsx` . Sheet name is csv filename without its' suffix.  
 
 ```
 $ convpandas csv2xlsx in1.csv in2.csv out.xlsx
@@ -90,7 +90,7 @@ $ convpandas csv2xlsx in.xlsx out.csv
 ```
 
 
-When specifying `-` for `CSV_FILE`, write to STDOUT. 
+When `CSV_FILE` is `-` , write to STDOUT. 
 
 ```
 $ convpandas csv2xlsx in.xlsx -
