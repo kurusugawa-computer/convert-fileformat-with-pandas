@@ -1,7 +1,7 @@
 import io
 import sys
 from pathlib import Path
-from typing import Dict, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import click
 import openpyxl
@@ -33,7 +33,7 @@ def _do_not_anything(value):
 
 
 def _to_excel(
-    df_dict: Dict[str, pandas.DataFrame],
+    df_tuple_list: List[Tuple[str, pandas.DataFrame]],
     xlsx_file: str,
     string_to_numeric: bool = True,
 ) -> None:
@@ -44,32 +44,19 @@ def _to_excel(
         convert_func = _do_not_anything
 
     workbook = openpyxl.Workbook(write_only=True)
-    for sheet_name, df in df_dict.items():
+    for sheet_name, df in df_tuple_list:
         if sheet_name == "-":
             worksheet = workbook.create_sheet()
         else:
+            # sheet名は最大31文字にする必要がある
+            if len(sheet_name) >= 32:
+                sheet_name = sheet_name[:31]
             worksheet = workbook.create_sheet(title=sheet_name)
         values = df.values
         for row_index in range(df.shape[0]):
             row = values[row_index]
             worksheet.append([convert_func(value) for value in row])
     workbook.save(xlsx_file)
-
-
-def append_df_to_dict(
-    df_dict: Dict[str, pandas.DataFrame], sheet_name: str, df: pandas.DataFrame
-):
-    if sheet_name not in df_dict:
-        df_dict[sheet_name] = df
-        return
-
-    index = 1
-    while True:
-        new_sheet_name = f"{sheet_name}_{index}"
-        if new_sheet_name not in df_dict:
-            df_dict[new_sheet_name] = df
-            return df_dict
-        index += 1
 
 
 @click.command(name="csv2xlsx", help="Convert csv file to xlsx file.")
@@ -103,17 +90,19 @@ def csv2xlsx(
     quotechar: Optional[str],
     string_to_numeric: bool,
 ):
-    df_dict = {}
-
     if csv_file == tuple("-"):
         str_stdin = click.get_text_stream("stdin", encoding=encoding).read()
         df = _read_csv(
             io.StringIO(str_stdin), sep=sep, encoding=encoding, quotechar=quotechar
         )
-        df_dict["-"] = df
-        _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
+        _to_excel([("-", df)], xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
         return
 
+    if len(csv_file) == 0:
+        print("Error: Specify 'CSV_FILE'.", file=sys.stderr)
+        sys.exit(1)
+
+    df_tuple_list = []
     for file in csv_file:
         file_path = Path(file)
         if not file_path.exists():
@@ -121,6 +110,6 @@ def csv2xlsx(
             sys.exit(1)
 
         df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
-        append_df_to_dict(df_dict, sheet_name=file_path.stem, df=df)
+        df_tuple_list.append((file_path.stem, df))
 
-    _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
+    _to_excel(df_tuple_list, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
