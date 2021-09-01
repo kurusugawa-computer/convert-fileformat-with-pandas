@@ -34,7 +34,7 @@ mypy = "*"
 flake8 = "*"
 autoflake = "*"
 isort = "*"
-black = {version = "^20.8b1", allow-prereleases = true}
+black = {version = "^21.8b0", allow-prereleases = true}
 pytest = "*"
 
 
