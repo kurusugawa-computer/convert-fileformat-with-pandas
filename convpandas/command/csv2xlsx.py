@@ -1,11 +1,14 @@
+import argparse
 import io
 import sys
 from pathlib import Path
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import click
 import openpyxl
 import pandas
+
+from convpandas.common.cli import PrettyHelpFormatter
 
 
 def _read_csv(
@@ -73,47 +76,17 @@ def append_df_to_dict(
         index += 1
 
 
-@click.command(name="csv2xlsx", help="Convert csv file to xlsx file.")
-@click.argument("csv_file", nargs=-1)
-@click.argument("xlsx_file", nargs=1)
-@click.option(
-    "--sep", default=",", show_default=True, help="Delimiter to use when reading csv."
-)
-@click.option(
-    "--encoding",
-    default="utf-8",
-    show_default=True,
-    help="Encoding to use when reading csv. List of Python standard encodings. "
-    "(https://docs.python.org/3/library/codecs.html#standard-encodings)",
-)
-@click.option(
-    "--quotechar",
-    help="The character used to denote the start and end of a quoted item when reading csv.",
-)
-@click.option(
-    "--string_to_numeric",
-    type=bool,
-    default=True,
-    help="If true, convert string to numeric. [default: true]",
-)
-@click.option(
-    "--sheet_name",
-    type=str,
-    nargs=-1,
-)
 def csv2xlsx(
-    csv_file: Tuple[str],
+    csv_files: List[str],
     xlsx_file: str,
+    *,
     sep: str,
     encoding: str,
     quotechar: Optional[str],
     string_to_numeric: bool,
-    sheet_name: Tuple[str],
+    sheet_names: List[str],
 ):
-    print(f"{sheet_name=}")
-    csv_files = csv_file
-    sheet_names = sheet_name
-    if len(sheet_names) > 0:
+    if sheet_names is not None:
         if len(sheet_names) != len(csv_files):
             print(
                 "Size of csv_files and size of sheet_name do not match.",
@@ -135,7 +108,7 @@ def csv2xlsx(
         _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
         return
 
-    if len(sheet_names) == 0:
+    if sheet_names is None:
         for file in csv_files:
             file_path = Path(file)
             if not file_path.exists():
@@ -154,5 +127,52 @@ def csv2xlsx(
             df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
             append_df_to_dict(df_dict, sheet_name=name, df=df)
 
-    print(f"{df_dict=}")
     _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
+
+
+def main(args):
+    csv2xlsx(
+        csv_files=args.csv_files,
+        xlsx_file=args.xlsx_file,
+        sep=args.sep,
+        encoding=args.encoding,
+        quotechar=args.quotechar,
+        string_to_numeric=args.string_to_numeric,
+        sheet_names=args.sheet_name,
+    )
+
+
+def add_parser(subparsers: argparse._SubParsersAction):
+    parser = subparsers.add_parser(
+        "csv2xlsx",
+        help="Convert csv file to xlsx file.",
+        formatter_class=PrettyHelpFormatter,
+    )
+    parser.set_defaults(command_help=parser.print_help)
+
+    parser.add_argument("csv_files", type=str, nargs="+")
+    parser.add_argument("xlsx_file", type=str)
+
+    parser.add_argument("--sep", default=",", help="Delimiter to use when reading csv.")
+
+    parser.add_argument(
+        "--encoding",
+        default="utf-8",
+        help="Encoding to use when reading csv. List of Python standard encodings.\n"
+        "https://docs.python.org/3/library/codecs.html#standard-encodings",
+    )
+    parser.add_argument(
+        "--quotechar",
+        help="The character used to denote the start and end of a quoted item when reading csv.",
+    )
+
+    parser.add_argument(
+        "--string_to_numeric",
+        action="store_true",
+        help="If specified, convert string to numeric.",
+    )
+
+    parser.add_argument("--sheet_name", type=str, nargs="+")
+
+    parser.set_defaults(subcommand_func=main)
+    return parser
