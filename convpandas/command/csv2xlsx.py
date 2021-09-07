@@ -2,11 +2,12 @@ import argparse
 import io
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 import click
 import openpyxl
 import pandas
+
 from convpandas.common.cli import PrettyHelpFormatter
 
 
@@ -14,15 +15,14 @@ def _read_csv(
     csv_file: Union[str, io.TextIOBase],
     sep: str,
     encoding: str,
-    quotechar: Optional[str],
+    quotechar: str,
 ) -> pandas.DataFrame:
     read_csv_kwargs = {
         "sep": sep,
         "encoding": encoding,
+        "quotechar": quotechar,
         "header": None,
     }
-    if quotechar is not None:
-        read_csv_kwargs.update({"quotechar": quotechar})
     return pandas.read_csv(csv_file, **read_csv_kwargs)
 
 
@@ -80,7 +80,7 @@ def csv2xlsx(
     *,
     sep: str,
     encoding: str,
-    quotechar: Optional[str],
+    quotechar: str,
     string_to_numeric: bool,
     sheet_names: List[str],
 ):
@@ -161,6 +161,7 @@ def add_parser(subparsers: argparse._SubParsersAction):
     )
     parser.add_argument(
         "--quotechar",
+        default='"',
         help="The character used to denote the start and end of a quoted item when reading csv.",
     )
 

@@ -38,7 +38,7 @@ def _to_csv(
 
 def xlsx2csv(
     xlsx_file: str,
-    csv_file: Optional[str],
+    csv_file: str,
     sheet_name: Optional[str],
     sep: str,
     encoding: str,

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "convpandas"
-version = "0.2.0"
+version = "0.3.0"
 description = "Convert file format with pandas"
 authors = ["yuji38kwmt"]
 maintainers = ["yuji38kwmt"]
@@ -27,7 +27,6 @@ classifiers = [
 python = "^3.7.1"
 pandas = "^1.2"
 openpyxl = "*"
-
 
 [tool.poetry.dev-dependencies]
 mypy = "*"

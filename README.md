@@ -58,8 +58,15 @@ Convert `in1.csv` and `in2.csv` to `out.xlsx` . Sheet name is csv filename witho
 $ convpandas csv2xlsx in1.csv in2.csv out.xlsx
 ```
 
-![](/home/vagrant/Documents/convert-fileformat-with-pandas/docs/img/output_xlsx_file_from_multiple_csv.png)
+![](docs/img/output_xlsx_file_from_multiple_csv.png)
 
+If `--sheet_name` is specified, sheet name is set.
+
+```
+$ convpandas csv2xlsx in1.csv in2.csv out.xlsx --sheet_name foo bar
+```
+
+![](docs/img/output_xlsx_file_from_multiple_csv2.png)
 
 ## xlsx2csv
 Convert xlsx file to csv file.
