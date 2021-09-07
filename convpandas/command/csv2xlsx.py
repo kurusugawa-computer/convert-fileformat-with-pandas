@@ -2,12 +2,11 @@ import argparse
 import io
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 import click
 import openpyxl
 import pandas
-
 from convpandas.common.cli import PrettyHelpFormatter
 
 
@@ -39,7 +38,6 @@ def _to_excel(
     df_dict: Dict[str, pandas.DataFrame],
     xlsx_file: str,
     string_to_numeric: bool = True,
-    sheet_names: Optional[Tuple[str]] = None,
 ) -> None:
     Path(xlsx_file).parent.mkdir(exist_ok=True, parents=True)
     if string_to_numeric:
@@ -96,7 +94,7 @@ def csv2xlsx(
 
     df_dict: Dict[str, pandas.DataFrame] = {}
 
-    if csv_files == tuple("-"):
+    if len(csv_files) == 1 and csv_files[0] == "-":
         str_stdin = click.get_text_stream("stdin", encoding=encoding).read()
         df = _read_csv(
             io.StringIO(str_stdin), sep=sep, encoding=encoding, quotechar=quotechar

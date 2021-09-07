@@ -1,4 +1,6 @@
+import io
 import os
+import sys
 from pathlib import Path
 
 from convpandas.__main__ import cli
@@ -16,11 +18,9 @@ class Test_csv2xlsx:
     def test_standard(self):
         cli(["csv2xlsx", str(data_path / "test.csv"), str(out_path / "out.xlsx")])
 
-    # def test_convert_stdin_csv(self):
-    #     cli(
-    #         ["-", str(out_path / "out2.xlsx")], input="name,id\nAlice,1\n"
-    #     )
-    #     assert result.exit_code == 0
+    def test_convert_stdin_csv(self):
+        sys.stdin = io.StringIO("name,id\nAlice,1\n")
+        cli(["csv2xlsx", "-", str(out_path / "out2.xlsx")])
 
     def test_convert_multiple_csv_to_xlsx(self):
         cli(
@@ -64,6 +64,8 @@ class Test_xlsx2csv:
             ]
         )
 
-    def test_output_stdout_csv(self):
+    def test_output_stdout_csv(self, capsys):
         cli(["xlsx2csv", str(data_path / "test2.xlsx"), "-"])
-        # assert result.output == "name,age\n田中,23\n"
+
+        captured = capsys.readouterr()
+        assert captured.out == "name,age\n田中,23\n"
