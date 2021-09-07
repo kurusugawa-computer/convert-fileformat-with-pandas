@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 from click.testing import CliRunner
-
 from convpandas.command.csv2xlsx import csv2xlsx
 from convpandas.command.xlsx2csv import xlsx2csv
 
@@ -40,6 +39,25 @@ class Test_csv2xlsx:
                 str(out_path / "out3.xlsx"),
             ],
         )
+        assert result.exit_code == 0
+
+    def test_convert_multiple_csv_to_xlsx_with_sheetnames(self):
+        print("aasdfadfafdasdfasfd")
+        result = self.runner.invoke(
+            csv2xlsx,
+            [
+                str(data_path / "test.csv"),
+                str(data_path / "test2.csv"),
+                str(data_path / "test.csv"),
+                str(out_path / "out3.xlsx"),
+                "--sheet_name",
+                "alice bob",
+                "bob",
+                "chris",
+            ],
+        )
+        print(result.output)
+        print(result.exception)
         assert result.exit_code == 0
 
 

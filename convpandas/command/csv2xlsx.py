@@ -36,6 +36,7 @@ def _to_excel(
     df_dict: Dict[str, pandas.DataFrame],
     xlsx_file: str,
     string_to_numeric: bool = True,
+    sheet_names: Optional[Tuple[str]] = None,
 ) -> None:
     Path(xlsx_file).parent.mkdir(exist_ok=True, parents=True)
     if string_to_numeric:
@@ -95,6 +96,11 @@ def append_df_to_dict(
     default=True,
     help="If true, convert string to numeric. [default: true]",
 )
+@click.option(
+    "--sheet_name",
+    type=str,
+    nargs=-1,
+)
 def csv2xlsx(
     csv_file: Tuple[str],
     xlsx_file: str,
@@ -102,25 +108,51 @@ def csv2xlsx(
     encoding: str,
     quotechar: Optional[str],
     string_to_numeric: bool,
+    sheet_name: Tuple[str],
 ):
-    df_dict = {}
+    print(f"{sheet_name=}")
+    csv_files = csv_file
+    sheet_names = sheet_name
+    if len(sheet_names) > 0:
+        if len(sheet_names) != len(csv_files):
+            print(
+                "Size of csv_files and size of sheet_name do not match.",
+                file=sys.stderr,
+            )
+            sys.exit(1)
 
-    if csv_file == tuple("-"):
+    df_dict: Dict[str, pandas.DataFrame] = {}
+
+    if csv_files == tuple("-"):
         str_stdin = click.get_text_stream("stdin", encoding=encoding).read()
         df = _read_csv(
             io.StringIO(str_stdin), sep=sep, encoding=encoding, quotechar=quotechar
         )
-        df_dict["-"] = df
+        if sheet_names is None:
+            df_dict["-"] = df
+        else:
+            df_dict[sheet_names[0]] = df
         _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
         return
 
-    for file in csv_file:
-        file_path = Path(file)
-        if not file_path.exists():
-            print(f"No such file: '{file}'", file=sys.stderr)
-            sys.exit(1)
+    if len(sheet_names) == 0:
+        for file in csv_files:
+            file_path = Path(file)
+            if not file_path.exists():
+                print(f"No such file: '{file}'", file=sys.stderr)
+                sys.exit(1)
 
-        df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
-        append_df_to_dict(df_dict, sheet_name=file_path.stem, df=df)
+            df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
+            append_df_to_dict(df_dict, sheet_name=file_path.stem, df=df)
+    else:
+        for file, name in zip(csv_files, sheet_names):
+            file_path = Path(file)
+            if not file_path.exists():
+                print(f"No such file: '{file}'", file=sys.stderr)
+                sys.exit(1)
 
+            df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
+            append_df_to_dict(df_dict, sheet_name=name, df=df)
+
+    print(f"{df_dict=}")
     _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
