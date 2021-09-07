@@ -3,6 +3,7 @@ from typing import Optional, Sequence
 
 import convpandas
 from convpandas.command.csv2xlsx import add_parser as csv2xlsx_add_parser
+from convpandas.command.xlsx2csv import add_parser as xlsx2csv_add_parser
 from convpandas.common.cli import PrettyHelpFormatter
 
 
@@ -26,6 +27,7 @@ def cli(arguments: Optional[Sequence[str]] = None):
 
     subparsers = parser.add_subparsers(dest="command_name")
     csv2xlsx_add_parser(subparsers)
+    xlsx2csv_add_parser(subparsers)
 
     if arguments is None:
         args = parser.parse_args()
