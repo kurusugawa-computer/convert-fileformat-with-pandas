@@ -1,10 +1,12 @@
+import argparse
 import os
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import click
 import pandas
+
+from convpandas.common.cli import PrettyHelpFormatter
 
 
 def _read_excel(xlsx_file: str, sheet_name: Optional[str]) -> pandas.DataFrame:
@@ -34,30 +36,9 @@ def _to_csv(
     df.to_csv(filepath_or_buffer, **to_csv_kwargs)
 
 
-@click.command(name="xlsx2csv", help="Convert xlsx file to csv file.")
-@click.argument("xlsx_file")
-@click.argument("csv_file")
-@click.option(
-    "--sheet_name",
-    help="Sheet name when reading xlsx. If not specified, read 1st sheet.",
-)
-@click.option(
-    "--sep", default=",", show_default=True, help="Field delimiter for the output file."
-)
-@click.option(
-    "--encoding",
-    default="utf-8",
-    show_default=True,
-    help="A string representing the encoding to use in the output file.",
-)
-@click.option(
-    "--quotechar",
-    default='"',
-    help="Character used to quote fields.",
-)
 def xlsx2csv(
     xlsx_file: str,
-    csv_file: Optional[str],
+    csv_file: str,
     sheet_name: Optional[str],
     sep: str,
     encoding: str,
@@ -74,3 +55,50 @@ def xlsx2csv(
         filepath_or_buffer = sys.stdout
 
     _to_csv(df, filepath_or_buffer, sep=sep, encoding=encoding, quotechar=quotechar)
+
+
+def main(args):
+    xlsx2csv(
+        xlsx_file=args.xlsx_file,
+        csv_file=args.csv_file,
+        sheet_name=args.sheet_name,
+        sep=args.sep,
+        encoding=args.encoding,
+        quotechar=args.quotechar,
+    )
+
+
+def add_parser(subparsers: argparse._SubParsersAction):
+    parser = subparsers.add_parser(
+        "xlsx2csv",
+        help="Convert xlsx file to csv file.",
+        formatter_class=PrettyHelpFormatter,
+    )
+    parser.set_defaults(command_help=parser.print_help)
+
+    parser.add_argument("xlsx_file", type=str)
+    parser.add_argument("csv_file", type=str)
+
+    parser.add_argument(
+        "--sheet_name",
+        type=str,
+        help="Sheet name when reading xlsx. If not specified, read 1st sheet.",
+    )
+
+    parser.add_argument(
+        "--sep", default=",", help="Field delimiter for the output file."
+    )
+
+    parser.add_argument(
+        "--encoding",
+        default="utf-8",
+        help="A string representing the encoding to use in the output file.",
+    )
+    parser.add_argument(
+        "--quotechar",
+        default='"',
+        help="Character used to quote fields.",
+    )
+
+    parser.set_defaults(subcommand_func=main)
+    return parser
