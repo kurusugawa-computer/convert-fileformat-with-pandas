@@ -135,7 +135,7 @@ def main(args):
         sep=args.sep,
         encoding=args.encoding,
         quotechar=args.quotechar,
-        string_to_numeric=args.string_to_numeric,
+        string_to_numeric=not args.numeric_to_string,
         sheet_names=args.sheet_name,
     )
 
@@ -166,9 +166,9 @@ def add_parser(subparsers: argparse._SubParsersAction):
     )
 
     parser.add_argument(
-        "--string_to_numeric",
+        "--numeric_to_string",
         action="store_true",
-        help="If specified, convert string to numeric.",
+        help="If specified, write numeric value as string type. If not specified, write numeric value as numeric type.",
     )
 
     parser.add_argument("--sheet_name", type=str, nargs="+")

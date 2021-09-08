@@ -24,18 +24,28 @@ Convert csv file to xlsx file.
 
 ```
 $ convpandas csv2xlsx --help
-Usage: convpandas csv2xlsx [OPTIONS] [CSV_FILE]... XLSX_FILE
+usage: convpandas csv2xlsx [-h] [--sep SEP] [--encoding ENCODING] [--quotechar QUOTECHAR] [--numeric_to_string] [--sheet_name SHEET_NAME [SHEET_NAME ...]]
+                           csv_files [csv_files ...] xlsx_file
 
-  Convert csv file to xlsx file.
+positional arguments:
+  csv_files
 
-Options:
-  --sep TEXT                   Delimiter to use when reading csv.  [default:,]
+  xlsx_file
 
-  --encoding TEXT              Encoding to use when reading csv. List of Python standard encodings. (https://docs.python.org/3/library/codecs.html#standard-encodings) [default: utf-8]
+optional arguments:
+  -h, --help            show this help message and exit
 
-  --quotechar TEXT             The character used to denote the start and end of a quoted item when reading csv.
+  --sep SEP             Delimiter to use when reading csv. (default: ,)
 
-  --string_to_numeric BOOLEAN  If true, convert string to numeric. [default:true]
+  --encoding ENCODING   Encoding to use when reading csv. List of Python standard encodings.
+                        https://docs.python.org/3/library/codecs.html#standard-encodings (default: utf-8)
+
+  --quotechar QUOTECHAR
+                        The character used to denote the start and end of a quoted item when reading csv. (default: ")
+
+  --numeric_to_string   If specified, write numeric value as string type. If not specified, write numeric value as numeric type. (default: False)
+
+  --sheet_name SHEET_NAME [SHEET_NAME ...]
 ```
 
 
@@ -73,20 +83,25 @@ Convert xlsx file to csv file.
 
 ```
 $ convpandas xlsx2csv --help
-Usage: convpandas xlsx2csv [OPTIONS] XLSX_FILE CSV_FILE
+usage: convpandas xlsx2csv [-h] [--sheet_name SHEET_NAME] [--sep SEP] [--encoding ENCODING] [--quotechar QUOTECHAR] xlsx_file csv_file
 
-  Convert xlsx file to csv file.
+positional arguments:
+  xlsx_file
 
-Options:
-  --sheet_name TEXT  Sheet name when reading xlsx. If not specified, read 1st sheet.
+  csv_file
 
-  --sep TEXT         Field delimiter for the output file.  [default: ,]
+optional arguments:
+  -h, --help            show this help message and exit
 
-  --encoding TEXT    A string representing the encoding to use in the output file.  [default: utf-8]
+  --sheet_name SHEET_NAME
+                        Sheet name when reading xlsx. If not specified, read 1st sheet. (default: None)
 
-  --quotechar TEXT   Character used to quote fields. 
+  --sep SEP             Field delimiter for the output file. (default: ,)
 
-  --help             Show this message and exit.
+  --encoding ENCODING   A string representing the encoding to use in the output file. (default: utf-8)
+
+  --quotechar QUOTECHAR
+                        Character used to quote fields. (default: ")
 ```
 
 
