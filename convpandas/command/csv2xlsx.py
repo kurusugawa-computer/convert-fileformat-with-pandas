@@ -1,18 +1,20 @@
 import argparse
-import io
+import collections
 import sys
+import warnings
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Dict, List, TextIO, Union
 
-import click
 import openpyxl
 import pandas
 
 from convpandas.common.cli import PrettyHelpFormatter
 
+MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME = 31
+
 
 def _read_csv(
-    csv_file: Union[str, io.TextIOBase],
+    csv_file: Union[str, TextIO],
     sep: str,
     encoding: str,
     quotechar: str,
@@ -50,28 +52,17 @@ def _to_excel(
         if sheet_name == "-":
             worksheet = workbook.create_sheet()
         else:
+            if len(sheet_name) > MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME:
+                warnings.warn(
+                    f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated."
+                )
+                sheet_name = sheet_name[0:MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME]
             worksheet = workbook.create_sheet(title=sheet_name)
         values = df.values
         for row_index in range(df.shape[0]):
             row = values[row_index]
             worksheet.append([convert_func(value) for value in row])
     workbook.save(xlsx_file)
-
-
-def append_df_to_dict(
-    df_dict: Dict[str, pandas.DataFrame], sheet_name: str, df: pandas.DataFrame
-):
-    if sheet_name not in df_dict:
-        df_dict[sheet_name] = df
-        return
-
-    index = 1
-    while True:
-        new_sheet_name = f"{sheet_name}_{index}"
-        if new_sheet_name not in df_dict:
-            df_dict[new_sheet_name] = df
-            return df_dict
-        index += 1
 
 
 def csv2xlsx(
@@ -92,13 +83,10 @@ def csv2xlsx(
             )
             sys.exit(1)
 
-    df_dict: Dict[str, pandas.DataFrame] = {}
+    df_dict: Dict[str, pandas.DataFrame] = collections.OrderedDict()
 
     if len(csv_files) == 1 and csv_files[0] == "-":
-        str_stdin = click.get_text_stream("stdin", encoding=encoding).read()
-        df = _read_csv(
-            io.StringIO(str_stdin), sep=sep, encoding=encoding, quotechar=quotechar
-        )
+        df = _read_csv(sys.stdin, sep=sep, encoding=encoding, quotechar=quotechar)
         if sheet_names is None:
             df_dict["-"] = df
         else:
@@ -114,7 +102,8 @@ def csv2xlsx(
                 sys.exit(1)
 
             df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
-            append_df_to_dict(df_dict, sheet_name=file_path.stem, df=df)
+            df_dict[file_path.stem] = df
+
     else:
         for file, name in zip(csv_files, sheet_names):
             file_path = Path(file)
@@ -123,7 +112,7 @@ def csv2xlsx(
                 sys.exit(1)
 
             df = _read_csv(file, sep=sep, encoding=encoding, quotechar=quotechar)
-            append_df_to_dict(df_dict, sheet_name=name, df=df)
+            df_dict[name] = df
 
     _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
 
