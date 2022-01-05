@@ -35,7 +35,8 @@ autoflake = "*"
 isort = "*"
 black = {version = "^21.8b0", allow-prereleases = true}
 pytest = "*"
-
+pytest-cov = "*"
+codecov = "*"
 
 [tool.poetry.scripts]
 convpandas = "convpandas.__main__:cli"
