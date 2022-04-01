@@ -12,6 +12,10 @@ script:
    - poetry run mypy convpandas
    - poetry run flake8 convpandas
    - poetry run pytest tests
+
+after_success:
+  - codecov 
+
 branches:
   only:
   - master
