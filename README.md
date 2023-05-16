@@ -1,12 +1,12 @@
 # convert-fileformat-with-pandas
 Convert file format with [pandas](https://pandas.pydata.org/).
 
-[![Build Status](https://travis-ci.org/yuji38kwmt/convpandas.svg?branch=master)](https://travis-ci.org/yuji38kwmt/convpandas)
+[![Build Status](https://travis-ci.org/kurusugawa-computer/convpandas.svg?branch=master)](https://travis-ci.org/kurusugawa-computer/convpandas)
 [![PyPI version](https://badge.fury.io/py/convpandas.svg)](https://badge.fury.io/py/convpandas)
 [![Python Versions](https://img.shields.io/pypi/pyversions/convpandas.svg)](https://pypi.org/project/convpandas/)
 
 # Requirements
-* Python 3.7+
+* Python 3.8.1+
 
 # Install
 
@@ -125,3 +125,7 @@ With specifying `--sheet_name`, you can select sheet name that you want to conve
 ```
 $ convpandas csv2xlsx in.xlsx out.csv --sheet_name sheet2
 ```
+
+
+# Usage for Developer
+Refer to https://github.com/kurusugawa-computer/convert-fileformat-with-pandas/blob/main/README_for_developer.md .

@@ -1,52 +1,57 @@
 [tool.poetry]
 name = "convpandas"
-version = "0.3.3"
+version = "0.0.0"  # `poetry-dynamic-versioning`を使ってGitHubのバージョンタグを取得している。変更不要
 description = "Convert file format with pandas"
-authors = ["yuji38kwmt"]
-maintainers = ["yuji38kwmt"]
+authors = ["Kurusugawa Computer Inc."]
 license = "MIT"
 keywords=["pandas", "csv","xlsx", "excel"]
 readme="README.md"
-repository="https://github.com/yuji38kwmt/convert-fileformat-with-pandas.git"
+repository="https://github.com/kurusugawa-computer/convert-fileformat-with-pandas.git"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Topic :: Utilities",
     "Operating System :: OS Independent",
 ]
 
 
 [tool.poetry.dependencies]
-python = "^3.7.1"
+python = "^3.8.1"
 pandas = ">=1"
 openpyxl = "*"
 
 [tool.poetry.dev-dependencies]
-mypy = "*"
-flake8 = "*"
+flake8 = "^6"
 autoflake = "*"
-isort = "*"
-black = {version = "^21.8b0", allow-prereleases = true}
-pytest = "*"
-pytest-cov = "*"
-codecov = "*"
+isort = "^5"
+black = "^23"
+mypy = "^1"
+
+pytest = "^7"
 
 [tool.poetry.scripts]
 convpandas = "convpandas.__main__:cli"
 
-
 [tool.mypy]
 ignore_missing_imports = true
+check_untyped_defs = true
 
+
+[tool.black]
+line-length = 120
+
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+
+
+[tool.poetry-dynamic-versioning]
+enable = true
+format = "{base}"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
