@@ -1,7 +1,7 @@
 # convert-fileformat-with-pandas
 Convert file format with [pandas](https://pandas.pydata.org/).
 
-[![Build Status](https://travis-ci.org/kurusugawa-computer/convpandas.svg?branch=master)](https://travis-ci.org/kurusugawa-computer/convpandas)
+[![Build Status](https://travis-ci.org/kurusugawa-computer/convpandas.svg?branch=main)](https://travis-ci.org/kurusugawa-computer/convpandas)
 [![PyPI version](https://badge.fury.io/py/convpandas.svg)](https://badge.fury.io/py/convpandas)
 [![Python Versions](https://img.shields.io/pypi/pyversions/convpandas.svg)](https://pypi.org/project/convpandas/)
 
