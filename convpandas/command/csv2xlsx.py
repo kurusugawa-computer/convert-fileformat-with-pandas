@@ -53,9 +53,7 @@ def _to_excel(
             worksheet = workbook.create_sheet()
         else:
             if len(sheet_name) > MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME:
-                warnings.warn(
-                    f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated."
-                )
+                warnings.warn(f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated.")
                 sheet_name = sheet_name[0:MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME]
             worksheet = workbook.create_sheet(title=sheet_name)
         values = df.values

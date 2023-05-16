@@ -1,21 +1,19 @@
 dist: xenial
 language: python
 python:
-  - "3.7"
   - "3.8"
   - "3.9"
+  - "3.10"
+  - "3.11"
 install:
-  - pip install poetry
-  - poetry install
+  - pip install pip --upgrade
+  - pip install "poetry<1.5"
+  - travis_retry poetry install
 
 script:
-   - poetry run mypy convpandas
-   - poetry run flake8 convpandas
-   - poetry run pytest tests
-
-after_success:
-  - codecov 
+   - make lint
+   - make test
 
 branches:
   only:
-  - master
+  - main
