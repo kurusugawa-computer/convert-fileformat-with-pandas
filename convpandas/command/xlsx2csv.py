@@ -85,9 +85,7 @@ def add_parser(subparsers: argparse._SubParsersAction):
         help="Sheet name when reading xlsx. If not specified, read 1st sheet.",
     )
 
-    parser.add_argument(
-        "--sep", default=",", help="Field delimiter for the output file."
-    )
+    parser.add_argument("--sep", default=",", help="Field delimiter for the output file.")
 
     parser.add_argument(
         "--encoding",

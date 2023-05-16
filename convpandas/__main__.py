@@ -20,9 +20,7 @@ def cli(arguments: Optional[Sequence[str]] = None):
         description="Command Line Interface for AnnoFab",
         formatter_class=PrettyHelpFormatter,
     )
-    parser.add_argument(
-        "--version", action="version", version=f"convpandas {convpandas.__version__}"
-    )
+    parser.add_argument("--version", action="version", version=f"convpandas {convpandas.__version__}")
     parser.set_defaults(command_help=parser.print_help)
 
     subparsers = parser.add_subparsers(dest="command_name")
