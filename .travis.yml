@@ -7,7 +7,7 @@ python:
   - "3.12"
 install:
   - pip install pip --upgrade
-  - pip install "poetry<1.5"
+  - pip install "poetry<1.8"
   - travis_retry poetry install
 
 script:
