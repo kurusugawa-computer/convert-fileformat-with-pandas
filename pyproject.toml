@@ -17,8 +17,8 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = "^3.8.1"
-pandas = ">=1"
+python = "^3.9"
+pandas = "*"
 openpyxl = "*"
 
 [tool.poetry.dev-dependencies]
