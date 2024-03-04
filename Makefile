@@ -19,6 +19,6 @@ lint:
 	poetry run mypy ${SOURCE_FILES} ${TEST_FILES}
 
 
+test:
+	poetry run pytest tests
 
-publish:
-	poetry publish --build

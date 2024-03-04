@@ -3,7 +3,7 @@ import collections
 import sys
 import warnings
 from pathlib import Path
-from typing import TextIO
+from typing import Any, TextIO
 
 import openpyxl
 import pandas
@@ -28,8 +28,11 @@ def _read_csv(
     return pandas.read_csv(csv_file, **read_csv_kwargs)
 
 
-def _to_numeric(value):  # noqa: ANN001, ANN202
-    return pandas.to_numeric(value, errors="ignore")
+def _to_numeric(value) -> Any:  # noqa: ANN001, ANN401
+    try:
+        return pandas.to_numeric(value)
+    except ValueError:
+        return value
 
 
 def _do_not_anything(value):  # noqa: ANN001, ANN202
