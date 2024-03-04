@@ -101,14 +101,14 @@ RUN set -x \
     && chmod +x /usr/local/devcontainer-tool/bin/docker-compose
 ENV PATH=/usr/local/devcontainer-tool/bin:${PATH}
 
-# python3.8
+# python3.10
 RUN set -x \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        python3.8 \
+        python3.10 \
         python3-distutils \
     && apt-get clean && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/* \
-    && ln -s $(which python3.8) /usr/local/bin/python
+    && ln -s $(which python3.10) /usr/local/bin/python
 
 # pip
 RUN set -x \
