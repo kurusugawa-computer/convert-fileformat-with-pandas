@@ -3,7 +3,7 @@ import collections
 import sys
 import warnings
 from pathlib import Path
-from typing import Dict, List, TextIO, Union
+from typing import TextIO
 
 import openpyxl
 import pandas
@@ -14,7 +14,7 @@ MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME = 31
 
 
 def _read_csv(
-    csv_file: Union[str, TextIO],
+    csv_file: str | TextIO,
     sep: str,
     encoding: str,
     quotechar: str,
@@ -28,16 +28,16 @@ def _read_csv(
     return pandas.read_csv(csv_file, **read_csv_kwargs)
 
 
-def _to_numeric(value):
+def _to_numeric(value):  # noqa: ANN001, ANN202
     return pandas.to_numeric(value, errors="ignore")
 
 
-def _do_not_anything(value):
+def _do_not_anything(value):  # noqa: ANN001, ANN202
     return value
 
 
 def _to_excel(
-    df_dict: Dict[str, pandas.DataFrame],
+    df_dict: dict[str, pandas.DataFrame],
     xlsx_file: str,
     string_to_numeric: bool = True,
 ) -> None:
@@ -53,25 +53,25 @@ def _to_excel(
             worksheet = workbook.create_sheet()
         else:
             if len(sheet_name) > MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME:
-                warnings.warn(f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated.")
-                sheet_name = sheet_name[0:MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME]
+                warnings.warn(f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated.", stacklevel=2)
+                sheet_name = sheet_name[0:MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME]  # noqa: PLW2901
             worksheet = workbook.create_sheet(title=sheet_name)
-        values = df.values
+        values = df.to_numpy()
         for row_index in range(df.shape[0]):
             row = values[row_index]
             worksheet.append([convert_func(value) for value in row])
     workbook.save(xlsx_file)
 
 
-def csv2xlsx(
-    csv_files: List[str],
+def csv2xlsx(  # noqa: ANN201
+    csv_files: list[str],
     xlsx_file: str,
     *,
     sep: str,
     encoding: str,
     quotechar: str,
     string_to_numeric: bool,
-    sheet_names: List[str],
+    sheet_names: list[str],
 ):
     if sheet_names is not None:
         if len(sheet_names) != len(csv_files):
@@ -81,7 +81,7 @@ def csv2xlsx(
             )
             sys.exit(1)
 
-    df_dict: Dict[str, pandas.DataFrame] = collections.OrderedDict()
+    df_dict: dict[str, pandas.DataFrame] = collections.OrderedDict()
 
     if len(csv_files) == 1 and csv_files[0] == "-":
         df = _read_csv(sys.stdin, sep=sep, encoding=encoding, quotechar=quotechar)
@@ -103,7 +103,7 @@ def csv2xlsx(
             df_dict[file_path.stem] = df
 
     else:
-        for file, name in zip(csv_files, sheet_names):
+        for file, name in zip(csv_files, sheet_names, strict=False):
             file_path = Path(file)
             if not file_path.exists():
                 print(f"No such file: '{file}'", file=sys.stderr)
@@ -115,7 +115,7 @@ def csv2xlsx(
     _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
 
 
-def main(args):
+def main(args):  # noqa: ANN001, ANN201
     csv2xlsx(
         csv_files=args.csv_files,
         xlsx_file=args.xlsx_file,
@@ -127,7 +127,7 @@ def main(args):
     )
 
 
-def add_parser(subparsers: argparse._SubParsersAction):
+def add_parser(subparsers: argparse._SubParsersAction):  # noqa: ANN201
     parser = subparsers.add_parser(
         "csv2xlsx",
         help="Convert csv file to xlsx file.",
