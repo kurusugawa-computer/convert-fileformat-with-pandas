@@ -7,7 +7,7 @@ from convpandas.command.xlsx2csv import add_parser as xlsx2csv_add_parser
 from convpandas.common.cli import PrettyHelpFormatter
 
 
-def cli(arguments: Sequence[str] | None = None):
+def cli(arguments: Sequence[str] | None = None):  # noqa: ANN201
     """
     注意： `deprecated`なツールは、サブコマンド化しない。
 

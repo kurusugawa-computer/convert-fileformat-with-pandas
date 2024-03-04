@@ -28,11 +28,11 @@ def _read_csv(
     return pandas.read_csv(csv_file, **read_csv_kwargs)
 
 
-def _to_numeric(value):
+def _to_numeric(value):  # noqa: ANN001, ANN202
     return pandas.to_numeric(value, errors="ignore")
 
 
-def _do_not_anything(value):
+def _do_not_anything(value):  # noqa: ANN001, ANN202
     return value
 
 
@@ -53,17 +53,17 @@ def _to_excel(
             worksheet = workbook.create_sheet()
         else:
             if len(sheet_name) > MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME:
-                warnings.warn(f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated.")
-                sheet_name = sheet_name[0:MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME]
+                warnings.warn(f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated.", stacklevel=2)
+                sheet_name = sheet_name[0:MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME]  # noqa: PLW2901
             worksheet = workbook.create_sheet(title=sheet_name)
-        values = df.values
+        values = df.to_numpy()
         for row_index in range(df.shape[0]):
             row = values[row_index]
             worksheet.append([convert_func(value) for value in row])
     workbook.save(xlsx_file)
 
 
-def csv2xlsx(
+def csv2xlsx(  # noqa: ANN201
     csv_files: list[str],
     xlsx_file: str,
     *,
@@ -115,7 +115,7 @@ def csv2xlsx(
     _to_excel(df_dict, xlsx_file=xlsx_file, string_to_numeric=string_to_numeric)
 
 
-def main(args):
+def main(args):  # noqa: ANN001, ANN201
     csv2xlsx(
         csv_files=args.csv_files,
         xlsx_file=args.xlsx_file,
@@ -127,7 +127,7 @@ def main(args):
     )
 
 
-def add_parser(subparsers: argparse._SubParsersAction):
+def add_parser(subparsers: argparse._SubParsersAction):  # noqa: ANN201
     parser = subparsers.add_parser(
         "csv2xlsx",
         help="Convert csv file to xlsx file.",

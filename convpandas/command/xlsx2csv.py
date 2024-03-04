@@ -18,7 +18,7 @@ def _read_excel(xlsx_file: str, sheet_name: str | None) -> pandas.DataFrame:
 
 def _to_csv(
     df: pandas.DataFrame,
-    filepath_or_buffer: Any,
+    filepath_or_buffer: Any,  # noqa: ANN401
     sep: str,
     encoding: str,
     quotechar: str,
@@ -36,7 +36,7 @@ def _to_csv(
     df.to_csv(filepath_or_buffer, **to_csv_kwargs)
 
 
-def xlsx2csv(
+def xlsx2csv(  # noqa: ANN201
     xlsx_file: str,
     csv_file: str,
     sheet_name: str | None,
@@ -57,7 +57,7 @@ def xlsx2csv(
     _to_csv(df, filepath_or_buffer, sep=sep, encoding=encoding, quotechar=quotechar)
 
 
-def main(args):
+def main(args):  # noqa: ANN001, ANN201
     xlsx2csv(
         xlsx_file=args.xlsx_file,
         csv_file=args.csv_file,
@@ -68,7 +68,7 @@ def main(args):
     )
 
 
-def add_parser(subparsers: argparse._SubParsersAction):
+def add_parser(subparsers: argparse._SubParsersAction):  # noqa: ANN201
     parser = subparsers.add_parser(
         "xlsx2csv",
         help="Convert xlsx file to csv file.",

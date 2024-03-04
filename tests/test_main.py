@@ -15,14 +15,14 @@ data_path = Path("./tests/data")
 
 
 class Test_csv2xlsx:
-    def test_standard(self):
+    def test_standard(self):  # noqa: ANN201
         cli(["csv2xlsx", str(data_path / "test.csv"), str(out_path / "out.xlsx")])
 
-    def test_convert_stdin_csv(self):
+    def test_convert_stdin_csv(self):  # noqa: ANN201
         sys.stdin = io.StringIO("name,id\nAlice,1\n")
         cli(["csv2xlsx", "-", str(out_path / "out2.xlsx")])
 
-    def test_convert_multiple_csv_to_xlsx(self):
+    def test_convert_multiple_csv_to_xlsx(self):  # noqa: ANN201
         cli(
             [
                 "csv2xlsx",
@@ -33,7 +33,7 @@ class Test_csv2xlsx:
             ]
         )
 
-    def test_convert_multiple_csv_to_xlsx_with_sheetnames(self):
+    def test_convert_multiple_csv_to_xlsx_with_sheetnames(self):  # noqa: ANN201
         cli(
             [
                 "csv2xlsx",
@@ -50,10 +50,10 @@ class Test_csv2xlsx:
 
 
 class Test_xlsx2csv:
-    def test_standard(self):
+    def test_standard(self):  # noqa: ANN201
         cli(["xlsx2csv", str(data_path / "test.xlsx"), str(out_path / "out.csv")])
 
-    def test_specify_sheetname(self):
+    def test_specify_sheetname(self):  # noqa: ANN201
         cli(
             [
                 "xlsx2csv",
@@ -64,7 +64,7 @@ class Test_xlsx2csv:
             ]
         )
 
-    def test_output_stdout_csv(self, capsys):
+    def test_output_stdout_csv(self, capsys):  # noqa: ANN001, ANN201
         cli(["xlsx2csv", str(data_path / "test2.xlsx"), "-"])
 
         captured = capsys.readouterr()
