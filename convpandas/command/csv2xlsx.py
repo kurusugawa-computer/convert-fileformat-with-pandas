@@ -3,7 +3,7 @@ import collections
 import sys
 import warnings
 from pathlib import Path
-from typing import Dict, List, TextIO, Union
+from typing import TextIO
 
 import openpyxl
 import pandas
@@ -14,7 +14,7 @@ MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME = 31
 
 
 def _read_csv(
-    csv_file: Union[str, TextIO],
+    csv_file: str | TextIO,
     sep: str,
     encoding: str,
     quotechar: str,
@@ -37,7 +37,7 @@ def _do_not_anything(value):
 
 
 def _to_excel(
-    df_dict: Dict[str, pandas.DataFrame],
+    df_dict: dict[str, pandas.DataFrame],
     xlsx_file: str,
     string_to_numeric: bool = True,
 ) -> None:
@@ -64,14 +64,14 @@ def _to_excel(
 
 
 def csv2xlsx(
-    csv_files: List[str],
+    csv_files: list[str],
     xlsx_file: str,
     *,
     sep: str,
     encoding: str,
     quotechar: str,
     string_to_numeric: bool,
-    sheet_names: List[str],
+    sheet_names: list[str],
 ):
     if sheet_names is not None:
         if len(sheet_names) != len(csv_files):
@@ -81,7 +81,7 @@ def csv2xlsx(
             )
             sys.exit(1)
 
-    df_dict: Dict[str, pandas.DataFrame] = collections.OrderedDict()
+    df_dict: dict[str, pandas.DataFrame] = collections.OrderedDict()
 
     if len(csv_files) == 1 and csv_files[0] == "-":
         df = _read_csv(sys.stdin, sep=sep, encoding=encoding, quotechar=quotechar)
@@ -103,7 +103,7 @@ def csv2xlsx(
             df_dict[file_path.stem] = df
 
     else:
-        for file, name in zip(csv_files, sheet_names):
+        for file, name in zip(csv_files, sheet_names, strict=False):
             file_path = Path(file)
             if not file_path.exists():
                 print(f"No such file: '{file}'", file=sys.stderr)

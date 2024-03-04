@@ -1,5 +1,5 @@
 import argparse
-from typing import Optional, Sequence
+from collections.abc import Sequence
 
 import convpandas
 from convpandas.command.csv2xlsx import add_parser as csv2xlsx_add_parser
@@ -7,7 +7,7 @@ from convpandas.command.xlsx2csv import add_parser as xlsx2csv_add_parser
 from convpandas.common.cli import PrettyHelpFormatter
 
 
-def cli(arguments: Optional[Sequence[str]] = None):
+def cli(arguments: Sequence[str] | None = None):
     """
     注意： `deprecated`なツールは、サブコマンド化しない。
 

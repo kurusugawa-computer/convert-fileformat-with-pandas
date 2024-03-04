@@ -1,24 +1,24 @@
-ifndef TARGET
-	export TARGET:=convpandas
-	export TEST_TARGET:=tests
+ifndef SOURCE_FILES
+	export SOURCE_FILES:=convpandas
 endif
-.PHONY: lint format  publish init test
+ifndef TEST_FILES
+	export TEST_FILES:=tests
+endif
 
-init:
-	pip install poetry --upgrade
-	poetry install
-
-test:
-	poetry run pytest tests
+.PHONY: init lint format validate test
 
 format:
-	poetry run autoflake  --in-place --remove-all-unused-imports  --ignore-init-module-imports --recursive ${TARGET} ${TEST_TARGET}
-	poetry run black ${TARGET} ${TEST_TARGET}
-	poetry run isort ${TARGET} ${TEST_TARGET}
+	poetry run ruff format ${SOURCE_FILES} ${TEST_FILES}
+	poetry run ruff check ${SOURCE_FILES} ${TEST_FILES} --fix-only --exit-zero
 
 lint:
-	poetry run mypy ${TARGET} ${TEST_TARGET}
-	poetry run flake8 ${TARGET}
+	poetry run ruff check ${SOURCE_FILES}
+	# テストコードはチェックを緩和する
+	# pygrep-hooks, flake8-datetimez, line-too-long, flake8-annotations, unused-noqa
+	poetry run ruff check ${TEST_FILES} --ignore PGH,DTZ,E501,ANN,RUF100
+	poetry run mypy ${SOURCE_FILES} ${TEST_FILES}
+
+
 
 publish:
 	poetry publish --build

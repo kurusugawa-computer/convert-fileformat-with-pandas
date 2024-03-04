@@ -2,15 +2,15 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import pandas
 
 from convpandas.common.cli import PrettyHelpFormatter
 
 
-def _read_excel(xlsx_file: str, sheet_name: Optional[str]) -> pandas.DataFrame:
-    read_excel_kwargs: Dict[str, Any] = {"header": None}
+def _read_excel(xlsx_file: str, sheet_name: str | None) -> pandas.DataFrame:
+    read_excel_kwargs: dict[str, Any] = {"header": None}
     if sheet_name is not None:
         read_excel_kwargs.update({"sheet_name": sheet_name})
     return pandas.read_excel(xlsx_file, **read_excel_kwargs)
@@ -39,7 +39,7 @@ def _to_csv(
 def xlsx2csv(
     xlsx_file: str,
     csv_file: str,
-    sheet_name: Optional[str],
+    sheet_name: str | None,
     sep: str,
     encoding: str,
     quotechar: str,
