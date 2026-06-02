@@ -1,12 +1,12 @@
 # convert-fileformat-with-pandas
 Convert file format with [pandas](https://pandas.pydata.org/).
 
-[![Build Status](https://app.travis-ci.com/kurusugawa-computer/convert-fileformat-with-pandas.svg?branch=main)](https://app.travis-ci.com/kurusugawa-computer/convert-fileformat-with-pandas)
+[![Python application](https://github.com/kurusugawa-computer/convert-fileformat-with-pandas/actions/workflows/lint-test.yaml/badge.svg)](https://github.com/kurusugawa-computer/convert-fileformat-with-pandas/actions/workflows/lint-test.yaml)
 [![PyPI version](https://badge.fury.io/py/convpandas.svg)](https://badge.fury.io/py/convpandas)
 [![Python Versions](https://img.shields.io/pypi/pyversions/convpandas.svg)](https://pypi.org/project/convpandas/)
 
 # Requirements
-* Python 3.9+
+* Python 3.11+
 
 # Install
 
