@@ -29,9 +29,12 @@ def _read_csv(
 
 
 def _to_numeric(value) -> Any:  # noqa: ANN001, ANN401
+    if pandas.isna(value):
+        return None
+
     try:
         return pandas.to_numeric(value)
-    except ValueError:
+    except (TypeError, ValueError):
         return value
 
 
@@ -59,7 +62,7 @@ def _to_excel(
                 warnings.warn(f"Sheet name '{sheet_name}' is more than 31 characters. So sheet name is truncated.", stacklevel=2)
                 sheet_name = sheet_name[0:MAXIMUM_NUMBER_OF_CHARACTERS_OF_SHEET_NAME]  # noqa: PLW2901
             worksheet = workbook.create_sheet(title=sheet_name)
-        values = df.to_numpy()
+        values = df.to_numpy(dtype=object, na_value=None)
         for row_index in range(df.shape[0]):
             row = values[row_index]
             worksheet.append([convert_func(value) for value in row])
