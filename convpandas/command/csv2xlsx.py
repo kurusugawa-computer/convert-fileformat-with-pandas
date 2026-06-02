@@ -146,8 +146,7 @@ def add_parser(subparsers: argparse._SubParsersAction):  # noqa: ANN201
     parser.add_argument(
         "--encoding",
         default="utf-8",
-        help="Encoding to use when reading csv. List of Python standard encodings.\n"
-        "https://docs.python.org/3/library/codecs.html#standard-encodings",
+        help="Encoding to use when reading csv. List of Python standard encodings.\nhttps://docs.python.org/3/library/codecs.html#standard-encodings",
     )
     parser.add_argument(
         "--quotechar",
