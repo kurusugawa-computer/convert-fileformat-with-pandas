@@ -3,7 +3,11 @@ import os
 import sys
 from pathlib import Path
 
+import openpyxl
+import pandas
+
 from convpandas.__main__ import cli
+from convpandas.command.csv2xlsx import _to_excel
 
 # プロジェクトトップに移動する
 os.chdir(os.path.dirname(os.path.abspath(__file__)) + "/../")
@@ -47,6 +51,36 @@ class Test_csv2xlsx:
                 "chris",
             ]
         )
+
+    def test_write_pandas3_string_dtype_missing_value_as_blank_cell(self, tmp_path):  # noqa: ANN001, ANN201
+        df = pandas.DataFrame({0: pandas.Series(["name", None], dtype="str")})
+        xlsx_file = tmp_path / "out.xlsx"
+
+        _to_excel({"sheet": df}, str(xlsx_file), string_to_numeric=False)
+
+        worksheet = openpyxl.load_workbook(xlsx_file).active
+        assert worksheet["A1"].value == "name"
+        assert worksheet["A2"].value is None
+
+    def test_write_nullable_string_dtype_missing_value_as_blank_cell(self, tmp_path):  # noqa: ANN001, ANN201
+        df = pandas.DataFrame({0: pandas.Series(["name", pandas.NA], dtype="string")})
+        xlsx_file = tmp_path / "out.xlsx"
+
+        _to_excel({"sheet": df}, str(xlsx_file), string_to_numeric=False)
+
+        worksheet = openpyxl.load_workbook(xlsx_file).active
+        assert worksheet["A1"].value == "name"
+        assert worksheet["A2"].value is None
+
+    def test_convert_numeric_string_dtype_values_to_excel_numbers(self, tmp_path):  # noqa: ANN001, ANN201
+        df = pandas.DataFrame({0: pandas.Series(["001", None], dtype="str")})
+        xlsx_file = tmp_path / "out.xlsx"
+
+        _to_excel({"sheet": df}, str(xlsx_file), string_to_numeric=True)
+
+        worksheet = openpyxl.load_workbook(xlsx_file).active
+        assert worksheet["A1"].value == 1
+        assert worksheet["A2"].value is None
 
 
 class Test_xlsx2csv:
