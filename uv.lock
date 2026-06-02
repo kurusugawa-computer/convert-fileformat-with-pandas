@@ -39,7 +39,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "openpyxl" },
-    { name = "pandas" },
+    { name = "pandas", specifier = ">=2.2,<4" },
 ]
 
 [package.metadata.requires-dev]
