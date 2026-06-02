@@ -19,9 +19,9 @@ RUN update-locale LANG=ja_JP.UTF-8 LANGUAGE=ja_JP:ja \
     && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
     && echo "Asia/Tokyo" > /etc/timezone
 
-ENV LANG ja_JP.UTF-8
-ENV LC_ALL ja_JP.UTF-8
-ENV LC_CTYPE ja_JP.UTF-8
+ENV LANG=ja_JP.UTF-8
+ENV LC_ALL=ja_JP.UTF-8
+ENV LC_CTYPE=ja_JP.UTF-8
 
 RUN set -x \
     && sed -i.bak -r 's!(deb|deb-src) \S+!\1 http://jp.archive.ubuntu.com/ubuntu/!' /etc/apt/sources.list
