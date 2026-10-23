@@ -1,0 +1,4 @@
+title = "convert-fileformat-with-pandas gitleaks config"
+
+[extend]
+useDefault = true

@@ -29,6 +29,7 @@ test = [
     "pytest>=9.1.1",
 ]
 linter = [
+    "pre-commit>=4.7.0",
     "ruff>=0.17.2",
     "mypy>=2.4.0",
 ]
