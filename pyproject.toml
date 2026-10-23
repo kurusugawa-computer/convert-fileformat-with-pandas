@@ -34,6 +34,7 @@ linter = [
 ]
 
 [tool.uv]
+required-version = ">=0.13.4"
 default-groups = ["test", "linter"]
 package = true
 
@@ -107,3 +108,6 @@ source = "uv-dynamic-versioning"
 
 [tool.hatch.build.targets.wheel]
 packages = ["convpandas"]
+
+[tool.uv-dynamic-versioning]
+fallback-version = "0.0.0"
