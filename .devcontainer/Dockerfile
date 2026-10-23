@@ -35,7 +35,6 @@ RUN set -x \
     && apt-get install -y --no-install-recommends \
         # python
         python3.12-dev \
-        python3-pip \
         # common tools
         bash-completion \
         build-essential \
@@ -64,13 +63,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=on \
     PIP_DISABLE_PIP_VERSION_CHECK=on
 
-# Python packages
-RUN set -x \
-    && python -m pip install -U \
-        pip \
-        setuptools \
-        requests \
-        "uv==0.13.5"
+# uv
+COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /uvx /usr/local/bin/
+ENV UV_LINK_MODE=copy
 
 # Add user / Grant sudo privileges
 RUN useradd -m -s /bin/bash -u 5000 -U vscode \
